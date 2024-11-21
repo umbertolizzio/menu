@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sapori Menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Lato', sans-serif;
+            box-sizing: border-box;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://cdn.pixabay.com/photo/2017/12/09/08/18/pizza-3007395_1280.jpg');
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+        }
+        .title {
+            font-size: 36px;
+            color: #ffa500;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+            margin: 20px 0;
+            text-align: center;
+        }
+        .menu-btn {
+            background-color: rgba(0, 0, 0, 0.7);
+            color: #ffa500;
+            font-size: 28px;
+            font-weight: 700;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 10px;
+            width: 100%;
+        }
+        .drawer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(-100%);
+            width: 80%;
+            max-width: 300px;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            padding: 20px;
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .drawer.open {
+            transform: translateX(0);
+        }
+        .drawer a {
+            display: block;
+            color: #ffa500;
+            font-size: 20px;
+            margin: 15px 0;
+            text-decoration: none;
+        }
+        .menu {
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.85);
+            border-radius: 10px;
+            margin: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s, transform 0.4s;
+        }
+        .menu:not(.hidden) {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .hidden {
+            display: none;
+        }
+        .close-btn {
+            background-color: #d9534f;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="title">Sapori di Grano</h1>
+    <button class="menu-btn" id="openMenuBtn">Apri Menu</button>
+
+    <!-- Drawer Menu -->
+    <div id="drawerMenu" class="drawer">
+        <a href="#" data-section="antipasti-section">Antipasti</a>
+        <a href="#" data-section="carne-insalate-section">Carne e Insalate</a>
+        <a href="#" data-section="pizze-rosse-section">Pizze Rosse</a>
+        <a href="#" data-section="pizze-bianche-section">Pizze Bianche</a>
+	<a href="#" data-section="hamburger-section">Hamburger Gourmet</a>
+        <a href="#" data-section="dolci-section">Dolci</a>
+        <a href="#" data-section="acqua-bibite-section">Acqua e Bibite</a>
+        <a href="#" data-section="birre-section-section">Birre</a>
+	<a href="#" data-section="vini-section-section">Vini</a>
+	<a href="#" data-section="liquori-caffe">Liquori e Caffè</a>
+	<a href="#" data-section="supplementi-section">Supplementi</a>
+	<button class="close-btn" id="closeDrawerBtn">Chiudi Menu</button>
+    </div>
+
+    <!-- Sezioni del Menu -->
+    <div id="antipasti-section" class="menu hidden">
+        <h1>Antipasti</h1>
+        <ul>
+            <li>Crocchette di Patate con provola <span class="price">€ 6,00</span></li>
+            <li>Frittelle di pizza con burrata, salame e ciliegino <span class="price">€ 9,50</span></li>
+        </ul>
+        <button class="close-btn" data-close-section="antipasti-section">Chiudi</button>
+    </div>
+
+    <div id="carne-insalate-section" class="menu hidden">
+        <h1>Pizze Rosse</h1>
+        <ul>
+            <li>Margherita <span class="price">€ 8,00</span></li>
+            <li>Diavola <span class="price">€ 10,00</span></li>
+        </ul>
+        <button class="close-btn" data-close-section="pizze-rosse-section">Chiudi</button>
+    </div>
+
+
+    <div id="pizze-rosse-section" class="menu hidden">
+        <h1>Pizze Rosse</h1>
+        <ul>
+            <li>Margherita <span class="price">€ 8,00</span></li>
+            <li>Diavola <span class="price">€ 10,00</span></li>
+        </ul>
+        <button class="close-btn" data-close-section="pizze-rosse-section">Chiudi</button>
+    </div>
+
+    <script>
+        const openMenuBtn = document.getElementById('openMenuBtn');
+        const drawerMenu = document.getElementById('drawerMenu');
+        const closeDrawerBtn = document.getElementById('closeDrawerBtn');
+
+        openMenuBtn.addEventListener('click', toggleDrawer);
+        closeDrawerBtn.addEventListener('click', closeDrawer);
+
+        function toggleDrawer() {
+            drawerMenu.classList.toggle('open');
+        }
+
+        function closeDrawer() {
+            drawerMenu.classList.remove('open');
+        }
+
+        // Gestione dei link nel menu
+        document.querySelectorAll('.drawer a').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const sectionId = link.getAttribute('data-section');
+                openSection(sectionId);
+                closeDrawer();
+            });
+        });
+
+        // Apertura della sezione del menu
+        function openSection(sectionId) {
+            document.querySelectorAll('.menu').forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // Chiusura della sezione e ritorno al drawer menu
+        document.querySelectorAll('.menu .close-btn').forEach(button => {
+            button.addEventListener('click', () => {
+                button.parentElement.classList.add('hidden');
+                drawerMenu.classList.add('open'); // Riapre il drawer menu
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
+
